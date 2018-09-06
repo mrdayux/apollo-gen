@@ -7,10 +7,10 @@ Generator and boilerplate for GraphQL apps
 Install with: npm install -g apollo-gen
 
 Create a new project in a empty folder:
-graphql-gen init
+apollo-gen init
 
 Available scripts
 
 -   build with: npm run build
--   update generated code: npx graphql-gen
+-   update generated code: npx apollo-gen
 -   start application: npm start

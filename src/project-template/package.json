@@ -17,7 +17,7 @@
     "scripts": {
         "start": "NODE_ENV=development PORT=8086 node dist/server.js | bunyan",
         "test": "NODE_ENV=development jest --forceExit --verbose",
-        "build": "npx graphql-gen && npm run clean-copy && npm run build-ts",
+        "build": "npx apollo-gen && npm run clean-copy && npm run build-ts",
         "clean-copy": "npx rm -f -r dist/* && npx cp -r src/* dist/",
         "build-ts": "npx tsc",
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",

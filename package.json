@@ -1,6 +1,6 @@
 {
     "name": "apollo-gen",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "MIT",
     "main": "./src/index.js",
     "repository": {
@@ -8,7 +8,7 @@
         "url": "git+https://github.com/mrdayux/apollo-gen.git"
     },
     "bin": {
-        "graphql-gen": "src/index.js"
+        "apollo-gen": "src/index.js"
     },
     "author": "Dario Ronzoni",
     "license": "MIT",

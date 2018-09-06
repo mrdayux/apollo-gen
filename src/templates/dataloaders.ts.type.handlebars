@@ -1,0 +1,10 @@
+{{#ifDirective this "entity" }}
+import DataLoader from 'dataloader';
+import { merge } from 'lodash';
+
+import dataloadersGen from './dataloaders.gen';
+
+export default (models: any) => {
+    return merge(dataloadersGen(models), {});
+};
+{{/ifDirective}}

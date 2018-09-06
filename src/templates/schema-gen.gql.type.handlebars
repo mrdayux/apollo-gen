@@ -1,0 +1,185 @@
+## DON'T TOUCH - GENERATED CODE ##
+
+{{#ifDirective this "entity" }}
+type {{singular}} implements Node {
+{{#each fields}}
+{{#ifDirective this "column" }}
+    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+{{/ifDirective}}
+{{#ifDirective this "relation" }}
+{{#if ../isArray}}    
+    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}(where: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput, orderBy: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}OrderBy!], sortBy:[{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]):  [{{../type}}]{{#if ../isRequired}}!{{/if}}
+{{else}}
+    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+{{/if}}
+{{/ifDirective}}
+{{#ifDirective this "hasRole" }}
+    @hasRole(roles: [{{#each roles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}])
+{{/ifDirective}}
+{{/each}}
+}
+
+type {{plural}}Pagination {
+    totalCount: Int!
+    nodes: [{{singular}}!]!
+}
+
+extend type Query {
+    {{#customSchema this "getOneRoles"}}{{toCamelCase singular}}(where: {{singular}}FilterInput): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getOneRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
+    {{#customSchema this "getAllRoles"}}{{toCamelCase plural}}(where: {{plural}}FilterInput, orderBy: [{{plural}}OrderBy], sortBy: [{{plural}}SortBy], limit: Int!, offset: Int): {{plural}}Pagination! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getAllRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
+}
+
+extend type Mutation {
+    {{#customSchema this "createRoles"}}create{{singular}}({{toCamelCase singular}}: Create{{singular}}!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each createRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
+    {{#customSchema this "updateRoles"}}update{{singular}}({{toCamelCase singular}}: Update{{singular}}!, id: Int!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each updateRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
+    {{#customSchema this "deleteRoles"}}delete{{singular}}(id: Int!): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each deleteRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
+}
+
+input {{singular}}FilterInput {
+{{#each fields}}
+{{#ifDirective this "id" }}
+    {{../name}}: {{../type}}
+{{/ifDirective}}
+{{#ifDirective this "unique" }}
+    {{../name}}: {{../type}}
+{{/ifDirective}}
+{{/each}}
+}
+
+input {{plural}}FilterInput {
+    AND: [{{plural}}FilterInput!]
+    OR: [{{plural}}FilterInput!]
+{{#each fields}}
+{{#ifCond type "===" "ID"}}
+    {{name}}: ID
+{{/ifCond}}
+{{#ifCond type "===" "String"}}
+    {{name}}: {{type}}
+    {{name}}_not: String
+    {{name}}_lt: String
+    {{name}}_lte: String
+    {{name}}_gt: String
+    {{name}}_gte: String
+    {{name}}_contains: String
+    {{name}}_startsWith: String
+    {{name}}_endsWith: String
+    {{name}}_in: [String!]
+    {{name}}_notIn: [String!]
+{{/ifCond}}
+{{#ifCond type "===" "Int"}}
+    {{name}}: {{type}}
+    {{name}}_not: {{type}}
+    {{name}}_lt: {{type}}
+    {{name}}_lte: {{type}}
+    {{name}}_gt: {{type}}
+    {{name}}_gte: {{type}}
+    {{name}}_in: [{{type}}!]
+    {{name}}_notIn: [{{type}}!]
+{{/ifCond}}
+{{#ifCond type "===" "Float"}}
+    {{name}}: {{type}}
+    {{name}}_not: {{type}}
+    {{name}}_lt: {{type}}
+    {{name}}_lte: {{type}}
+    {{name}}_gt: {{type}}
+    {{name}}_gte: {{type}}
+    {{name}}_in: [{{type}}!]
+    {{name}}_notIn: [{{type}}!]
+{{/ifCond}}
+{{#ifCond type "===" "Boolean"}}
+    {{name}}: {{type}}
+{{/ifCond}}
+{{#ifCond type "===" "DateTime"}}
+    {{name}}: {{type}}
+    {{name}}_not: {{type}}
+    {{name}}_lt: {{type}}
+    {{name}}_lte: {{type}}
+    {{name}}_gt: {{type}}
+    {{name}}_gte: {{type}}
+    {{name}}_contains: {{type}}
+    {{name}}_startsWith: {{type}}
+    {{name}}_endsWith: {{type}}
+    {{name}}_in: [{{type}}!]
+    {{name}}_notIn: [{{type}}!]
+{{/ifCond}}
+{{#ifCond type "===" "Date"}}
+    {{name}}: {{type}}
+    {{name}}_not: {{type}}
+    {{name}}_lt: {{type}}
+    {{name}}_lte: {{type}}
+    {{name}}_gt: {{type}}
+    {{name}}_gte: {{type}}
+    {{name}}_contains: {{type}}
+    {{name}}_startsWith: {{type}}
+    {{name}}_endsWith: {{type}}
+    {{name}}_in: [{{type}}!]
+    {{name}}_notIn: [{{type}}!]
+{{/ifCond}}
+{{#if isEnum}}
+    {{name}}: {{type}}
+    {{name}}_in: [{{type}}!]
+    {{name}}_notIn: [{{type}}!]
+{{/if}}
+{{#ifDirective this "relation" }}
+    {{../name}}_any: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput
+    {{../name}}_none: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput
+    {{../name}}_join: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput
+    {{../name}}_leftJoin: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput
+    {{../name}}_rightJoin: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput
+{{/ifDirective}}
+{{/each}}
+}
+
+input Create{{singular}} {
+{{#each fields}}
+{{#ifDirective this "column" }}
+{{#unlessDirective this "id" }}
+    {{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+{{/unlessDirective}}
+{{/ifDirective}}
+{{/each}}
+}
+
+input Update{{singular}} {
+{{#each fields}}
+{{#ifDirective this "column" }}
+{{#unlessDirective this "id" }}
+    {{../name}}: {{../type}}
+{{/unlessDirective}}
+{{/ifDirective}}
+{{/each}}
+}
+
+enum {{plural}}OrderBy {
+{{#each fields}}
+{{#unlessDirective this "relation" }}
+    {{../name}}_ASC
+    {{../name}}_DESC
+{{/unlessDirective}}
+{{/each}}
+}
+
+input {{plural}}SortBy {
+{{#each fields}}
+{{#unlessDirective this "relation" }}
+    {{../name}}: SortDirection
+{{/unlessDirective}}
+{{#ifDirective this "relation" }}
+    {{../name}}_join: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]
+{{/ifDirective}}
+{{/each}}
+}
+
+# input {{plural}}SortBy2 {
+# {{#each fields}}
+# {{#unlessDirective this "relation" }}
+#     {{../name}}: SortDirection
+# {{/unlessDirective}}
+# {{#ifDirective this "relation" }}
+# {{#ifCond relationType "===" "MANY_TO_ONE"}}
+#     {{../name}}_join: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]
+# {{/ifCond}}
+# {{/ifDirective}}
+# {{/each}}
+# }
+# {{/ifDirective}}

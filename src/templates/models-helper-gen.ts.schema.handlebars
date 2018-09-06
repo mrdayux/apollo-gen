@@ -1,0 +1,519 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+import { QueryBuilder } from 'knex';
+import { ApolloError } from 'apollo-server';
+
+import knex from '../core/knex_connector';
+{{#each types }}
+{{#ifDirective this "entity" }}
+import { getRelation as getRelation{{toPascalCase singular }} } from './entities/{{toLowerCase singular }}/model';
+{{/ifDirective}}
+{{/each}}
+
+// operators
+export const operators = {
+    not: 'not',
+    lt: 'lt',
+    lte: 'lte',
+    gt: 'gt',
+    gte: 'gte',
+    contains: 'contains',
+    startsWith: 'startsWith',
+    endWith: 'endWith',
+    in: 'in',
+    notIn: 'notIn',
+    any: 'any',
+    none: 'none',
+    join: 'join',
+    leftJoin: 'leftJoin',
+    rightJoin: 'rightJoin',
+    ASC: 'ASC',
+    DESC: 'DESC',
+};
+
+// from clause
+
+export const getAllFrom = (query: QueryBuilder, table: string, filters?: any[], sortBy?: any[]): QueryBuilder => {
+    let queryResult: QueryBuilder = query;
+    let tables = [table];
+    if (filters) {
+        ({ queryJoin: queryResult, tablesJoin: tables } = filters.reduce(
+            ({ queryJoin, tablesJoin }: { queryJoin: QueryBuilder; tablesJoin: string[] }, filter: any) => {
+                if (!filter) {
+                    return { queryJoin, tablesJoin };
+                }
+                return getFromFilter(queryJoin, tablesJoin, mapRelationsFilter(filter, table));
+            },
+            { queryJoin: queryResult, tablesJoin: tables },
+        ));
+    }
+
+    if (sortBy) {
+        ({ queryJoin: queryResult, tablesJoin: tables } = getFromSortBy(
+            queryResult,
+            tables,
+            mapRelationsSortBy(sortBy, table),
+        ));
+    }
+
+    return queryResult;
+};
+
+// where clause
+
+export const getFromFilter = (query: QueryBuilder, tables: string[], filter: any) => {
+    let queryJoin: QueryBuilder = query;
+    let tablesJoin: string[] = tables;
+
+    if (filter.AND) {
+        filter.AND.forEach((innerFilter: any) => {
+            ({ queryJoin, tablesJoin } = getFromFilter(queryJoin, tablesJoin, innerFilter));
+        });
+    }
+
+    if (filter.OR) {
+        filter.OR.forEach((innerFilter: any) => {
+            ({ queryJoin, tablesJoin } = getFromFilter(queryJoin, tablesJoin, innerFilter));
+        });
+    }
+
+    for (const key in filter) {
+        if (Object.prototype.hasOwnProperty.call(filter, key)) {
+            if (key === 'OR' || key === 'AND') {
+                continue;
+            }
+
+            const value = filter[key];
+            const { operator } = splitPropertyOperator(key);
+
+            if (operator === operators.join) {
+                if (
+                    value.table &&
+                    value.column &&
+                    value.fkTable &&
+                    value.fkColumn &&
+                    value.filter &&
+                    !tablesJoin.includes(value.fkTableAlias)
+                ) {
+                    queryJoin = queryJoin.innerJoin(
+                        `${value.fkTable} as ${value.fkTableAlias}`,
+                        `${value.tableAlias || value.table}.${value.column}`,
+                        '=',
+                        `${value.fkTableAlias}.${value.fkColumn}`,
+                    );
+
+                    tablesJoin.push(value.fkTableAlias);
+
+                    ({ queryJoin, tablesJoin } = getFromFilter(queryJoin, tablesJoin, value.filter));
+                }
+            } else if (operator === operators.leftJoin) {
+                if (
+                    value.table &&
+                    value.column &&
+                    value.fkTable &&
+                    value.fkColumn &&
+                    value.filter &&
+                    !tablesJoin.includes(value.fkTableAlias)
+                ) {
+                    queryJoin = queryJoin.leftOuterJoin(
+                        `${value.fkTable} as ${value.fkTableAlias}`,
+                        `${value.tableAlias || value.table}.${value.column}`,
+                        '=',
+                        `${value.fkTableAlias}.${value.fkColumn}`,
+                    );
+
+                    tablesJoin.push(value.fkTableAlias);
+
+                    ({ queryJoin, tablesJoin } = getFromFilter(queryJoin, tablesJoin, value.filter));
+                }
+            } else if (operator === operators.rightJoin) {
+                if (
+                    value.table &&
+                    value.column &&
+                    value.fkTable &&
+                    value.fkColumn &&
+                    value.filter &&
+                    !tablesJoin.includes(value.fkTableAlias)
+                ) {
+                    queryJoin = queryJoin.rightOuterJoin(
+                        `${value.fkTable} as ${value.fkTableAlias}`,
+                        `${value.tableAlias || value.table}.${value.column}`,
+                        '=',
+                        `${value.fkTableAlias}.${value.fkColumn}`,
+                    );
+
+                    tablesJoin.push(value.fkTableAlias);
+
+                    ({ queryJoin, tablesJoin } = getFromFilter(queryJoin, tablesJoin, value.filter));
+                }
+            }
+        }
+    }
+
+    return { queryJoin, tablesJoin };
+};
+
+export const mapAllFilter = (filter: any, table: string): any => {
+    return mapFilter(mapRelationsFilter(filter, table), table);
+};
+
+export const mapFilter = (filter: any, table: string) => {
+    return (builder: QueryBuilder) => {
+        if (filter.AND) {
+            const andWhereFilters = filter.AND.map((innerFilter: any) => {
+                return mapFilter(innerFilter, table);
+            });
+            andWhereFilters.forEach((andWhereFilter: () => QueryBuilder) => {
+                builder.andWhere(andWhereFilter);
+            });
+        }
+
+        if (filter.OR) {
+            const orWhereFilters = filter.OR.map((innerFilter: any) => {
+                return mapFilter(innerFilter, table);
+            });
+            orWhereFilters.forEach((orWhereFilter: () => QueryBuilder) => {
+                builder.orWhere(orWhereFilter);
+            });
+        }
+
+        for (const key in filter) {
+            if (Object.prototype.hasOwnProperty.call(filter, key)) {
+                if (key === 'OR' || key === 'AND') {
+                    continue;
+                }
+
+                let value = filter[key];
+                const { property, operator } = splitPropertyOperator(key);
+                let knexOperator: string = '';
+
+                switch (operator) {
+                    case operators.not:
+                        knexOperator = '<>';
+                        break;
+
+                    case operators.lt:
+                        knexOperator = '<';
+                        break;
+
+                    case operators.lte:
+                        knexOperator = '<=';
+                        break;
+
+                    case operators.gt:
+                        knexOperator = '>';
+                        break;
+
+                    case operators.gte:
+                        knexOperator = '>=';
+                        break;
+
+                    case operators.contains:
+                        knexOperator = 'like';
+                        value = `%${value}%`;
+                        break;
+
+                    case operators.startsWith:
+                        knexOperator = 'like';
+                        value = `${value}%`;
+                        break;
+
+                    case operators.endWith:
+                        knexOperator = 'like';
+                        value = `%${value}`;
+                        break;
+
+                    case operators.in:
+                        knexOperator = 'in';
+                        value = value;
+                        break;
+
+                    case operators.notIn:
+                        knexOperator = 'not in';
+                        value = value;
+                        break;
+
+                    case operators.any:
+                        if (value.column && value.fkTable && value.fkColumn) {
+                            const subquery = knex
+                                .select(`${value.fkTable}.${value.fkColumn}`)
+                                .from(value.fkTable)
+                                .where(mapFilter(value.filter, value.fkTable));
+                            builder.whereIn(`${value.table}.${value.column}`, subquery);
+                        } else {
+                            throw new ApolloError('Errore: E\' possibile utilizzare filtri "any" solo sul primo livello');
+                        }
+                        break;
+
+                    case operators.none:
+                        if (value.column && value.fkTable && value.fkColumn) {
+                            const subquery = knex
+                                .select(`${value.fkTable}.${value.fkColumn}`)
+                                .from(value.fkTable)
+                                .where(mapFilter(value.filter, value.fkTable));
+                            builder.whereNotIn(`${value.table}.${value.column}`, subquery);
+                        } else {
+                            throw new ApolloError('Errore: E\' possibile utilizzare filtri "none" solo sul primo livello');
+                        }
+                        break;
+
+                    case operators.join:
+                        if (value.table && value.column && value.fkTable && value.fkTableAlias && value.fkColumn) {
+                            builder.where(mapFilter(value.filter, value.fkTableAlias));
+                        } else {
+                            throw new ApolloError('Errore: Filtro join errato');
+                        }
+                        break;
+
+                    case operators.leftJoin:
+                        if (value.table && value.column && value.fkTable && value.fkTableAlias && value.fkColumn) {
+                            builder.where(mapFilter(value.filter, value.fkTableAlias));
+                        } else {
+                            throw new ApolloError('Errore: filtro leftJoin errato');
+                        }
+                        break;
+
+                    case operators.rightJoin:
+                        if (value.table && value.column && value.fkTable && value.fkTableAlias && value.fkColumn) {
+                            builder.where(mapFilter(value.filter, value.fkTableAlias));
+                        } else {
+                            throw new ApolloError('Errore: filtro rightJoin errato');
+                        }
+                        break;
+
+                    default:
+                        if (value === null) {
+                            knexOperator = 'IS';
+                        } else {
+                            knexOperator = '=';
+                        }
+                        break;
+                }
+
+                if (knexOperator) {
+                    builder.andWhere(`${table}.${property}`, knexOperator, value);
+                }
+            }
+        }
+    };
+};
+
+// sort by clause
+
+export const addSelectSortBy = (sqlRaw: string, table: string, sortBy: any[] | undefined): string => {
+    let sqlRawOrderBy = sqlRaw || '';
+    if (sortBy) {
+        const sortByFields = mapRelationsSortBy(sortBy, table);
+
+        sortByFields.forEach((objSortBy: any) => {
+            Object.keys(objSortBy).forEach((key: string) => {
+                const { property, operator } = splitPropertyOperator(key);
+                if (operator === operators.join) {
+                    const subSortBy: any = objSortBy[key];
+                    sqlRawOrderBy += `${addSelectSortBy(sqlRawOrderBy, subSortBy.fkTableAlias, subSortBy.sortBy)}, `;
+                } else {
+                    const direction: string = objSortBy[key];
+                    sqlRawOrderBy += `${table}.${property}, `;
+                }
+            });
+        });
+    }
+
+    return sqlRawOrderBy.replace(/, $/gi, '');
+};
+
+export const getFromSortBy = (query: QueryBuilder, tables: string[], sortByFields: any[]) => {
+    let queryJoin: QueryBuilder = query;
+    let tablesJoin: string[] = tables;
+
+    sortByFields.forEach(sortBy => {
+        for (const key in sortBy) {
+            if (Object.prototype.hasOwnProperty.call(sortBy, key)) {
+                const value = sortBy[key];
+                const { operator, property } = splitPropertyOperator(key);
+
+                if (operator === operators.join) {
+                    if (
+                        value.table &&
+                        value.column &&
+                        value.fkTable &&
+                        value.fkTableAlias &&
+                        value.fkColumn &&
+                        value.sortBy &&
+                        !tablesJoin.includes(value.fkTableAlias)
+                    ) {
+                        queryJoin = queryJoin.innerJoin(
+                            `${value.fkTable} as ${value.fkTableAlias}`,
+                            `${value.tableAlias || value.table}.${value.column}`,
+                            '=',
+                            `${value.fkTableAlias}.${value.fkColumn}`,
+                        );
+
+                        tablesJoin.push(value.fkTableAlias);
+
+                        ({ queryJoin, tablesJoin } = getFromSortBy(queryJoin, tablesJoin, value.sortBy));
+                    }
+                }
+            }
+        }
+    });
+
+    return { queryJoin, tablesJoin };
+};
+
+export const addSortBy = (query: QueryBuilder, table: string, sortBy: any[]): QueryBuilder => {
+    let queryOrderBy = query;
+    const sortByFields = mapRelationsSortBy(sortBy, table);
+
+    sortByFields.forEach((objSortBy: any) => {
+        Object.keys(objSortBy).forEach((key: string) => {
+            const { property, operator } = splitPropertyOperator(key);
+            if (operator === operators.join) {
+                const subSortBy: any = objSortBy[key];
+                queryOrderBy = addSortBy(queryOrderBy, subSortBy.fkTableAlias, subSortBy.sortBy);
+            } else {
+                const direction: string = objSortBy[key];
+                queryOrderBy = queryOrderBy.orderBy(`${table}.${property}`, direction);
+            }
+        });
+    });
+
+    return queryOrderBy;
+};
+
+// order by clause
+
+export const addOrderBy = (query: QueryBuilder, orderBy: string[]): QueryBuilder => {
+    let queryOrderBy = query;
+
+    orderBy.forEach((clause: string) => {
+        const { property, operator } = splitPropertyOperator(clause);
+        queryOrderBy = queryOrderBy.orderBy(property, operator);
+    });
+
+    return queryOrderBy;
+};
+
+// split
+
+export const splitPropertyOperator = (key: string) => {
+    const keySections = key.split('_');
+    const property = keySections.length > 1 ? keySections.slice(0, keySections.length - 1).join('_') : key;
+    const operator = keySections.length > 1 ? keySections[keySections.length - 1] : undefined;
+
+    const operatorsKeys: any = operators;
+    if (!operator || !operatorsKeys[operator]) {
+        return { property: key, operator: undefined };
+    }
+
+    return { property, operator };
+};
+
+// map all relations
+
+export const mapRelationsFilter = (filter: any, table: string, tableAlias?: string): any => {
+    const genericFilter: any = {};
+    if (filter.AND) {
+        const andWhereFilters = filter.AND.map((innerFilter: any) => {
+            return mapRelationsFilter(innerFilter, table, tableAlias);
+        });
+        genericFilter.AND = andWhereFilters;
+    }
+
+    if (filter.OR) {
+        const orWhereFilters = filter.OR.map((innerFilter: any) => {
+            return mapRelationsFilter(innerFilter, table, tableAlias);
+        });
+        genericFilter.OR = orWhereFilters;
+    }
+
+    for (const key in filter) {
+        if (Object.prototype.hasOwnProperty.call(filter, key)) {
+            if (key === 'OR' || key === 'AND') {
+                continue;
+            }
+
+            if (
+                key.endsWith(`_${operators.any}`) ||
+                key.endsWith(`_${operators.none}`) ||
+                key.endsWith(`_${operators.join}`) ||
+                key.endsWith(`_${operators.leftJoin}`) ||
+                key.endsWith(`_${operators.rightJoin}`)
+            ) {
+                const { property } = splitPropertyOperator(key);
+                const { column, fkTable, fkColumn } = getRelations(table)(property);
+                const fkTableAlias = `${table}_${fkTable}`;
+
+                genericFilter[key] = {
+                    filter: mapRelationsFilter(filter[key], fkTable, fkTableAlias),
+                    table,
+                    tableAlias,
+                    column,
+                    fkTable,
+                    fkTableAlias,
+                    fkColumn,
+                };
+            } else {
+                genericFilter[key] = filter[key];
+            }
+        }
+    }
+    return genericFilter;
+};
+
+export const mapRelationsSortBy = (sortByFields: any[], table: string, tableAlias?: string): any[] => {
+    const genericSortByFields: any = [];
+
+    sortByFields.forEach(sortBy => {
+        const genericSortBy: any = {};
+        for (const key in sortBy) {
+            if (Object.prototype.hasOwnProperty.call(sortBy, key)) {
+                if (
+                    key.endsWith(`_${operators.join}`) ||
+                    key.endsWith(`_${operators.leftJoin}`) ||
+                    key.endsWith(`_${operators.rightJoin}`)
+                ) {
+                    const { property } = splitPropertyOperator(key);
+                    const { column, fkTable, fkColumn } = getRelations(table)(property);
+                    const fkTableAlias = `${table}_${fkTable}`;
+
+                    genericSortBy[key] = {
+                        sortBy: mapRelationsSortBy(sortBy[key], fkTable, tableAlias),
+                        table,
+                        tableAlias,
+                        column,
+                        fkTable,
+                        fkTableAlias,
+                        fkColumn,
+                    };
+                } else {
+                    genericSortBy[key] = sortBy[key];
+                }
+            }
+        }
+        genericSortByFields.push(genericSortBy);
+    });
+
+    return genericSortByFields;
+};
+
+// get all relations
+
+const getRelations = (table: string): ((property: string) => any) => {
+    switch (table) {
+
+{{#each types }}
+{{#ifDirective this "entity" }}
+case '{{toCamelCase singular }}':
+    return getRelation{{toPascalCase singular }};
+    
+{{/ifDirective}}
+{{/each}}
+
+        default:
+            return (property: string) => {
+                return {};
+            };
+    }
+};

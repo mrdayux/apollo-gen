@@ -1,0 +1,12 @@
+{
+  schema: {
+    files: [
+      'src/graphql/schema.gen.gql',
+      'src/graphql/directives/**/schema.gql',
+      'src/graphql/custom-scalar-types/**/schema.gql',
+      'src/graphql/entities/**/schema.gen.gql',
+      'src/graphql/entities/**/schema.gql',
+      'src/graphql/enum/schema.gql'
+    ]
+  }
+}

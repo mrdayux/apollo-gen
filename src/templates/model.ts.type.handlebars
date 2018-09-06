@@ -1,0 +1,18 @@
+{{#ifDirective this "entity" }}
+import knex from '../../../core/knex_connector';
+import { I{{singular}} } from './model.gen';
+
+// EXPORT GENERATED MODEL FUNCTION
+export * from './model.gen';
+
+
+// EXPORT CUSTOM MODEL FUNCTION
+// export const readAll2 = async (limit?: number): Promise<I{{singular}}[]> => {
+//     const query = knex('{{table}}');
+//     if (limit) {
+//         query.limit(limit);
+//     }
+//     const rows = await query;
+//     return rows || [];
+// };
+{{/ifDirective}}

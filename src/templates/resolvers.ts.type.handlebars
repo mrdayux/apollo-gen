@@ -1,0 +1,18 @@
+{{#ifDirective this "entity" }}
+import { merge } from 'lodash';
+
+import resolversGen from './resolvers.gen';
+import { I{{singular}} } from './model';
+import { IContext } from '../../index';
+
+const resolvers = {
+    // Query: {
+    //     async {{toCamelCase plural}}2(_: void, __: void, ctx: IContext) {
+    //         const {{toCamelCase plural}} = await ctx.models.{{toCamelCase singular}}.readAll2(10);
+    //         return {{toCamelCase plural}};
+    //     },
+    // },
+};
+
+export default merge({}, resolversGen, resolvers);
+{{/ifDirective}}

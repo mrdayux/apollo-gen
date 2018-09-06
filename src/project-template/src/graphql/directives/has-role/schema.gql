@@ -1,0 +1,1 @@
+directive @hasRole(roles: [AuthRole!]) on QUERY | FIELD | FIELD_DEFINITION

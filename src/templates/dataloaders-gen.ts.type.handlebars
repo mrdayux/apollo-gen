@@ -1,0 +1,26 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+{{#ifDirective this "entity" }}
+import DataLoader from 'dataloader';
+
+export default (models: any) => {
+    return {
+{{#eachUniqueColumnRelation fields}}
+{{#ifDirective this "relation" }}
+{{#each ../../fields }}
+{{#ifCond name "===" ../column}}
+{{#ifDirective this "id" }}
+        loaderByIds: new DataLoader((keys: any) => models.{{#ifDirective ../../../../this "entity" }}{{table}}{{/ifDirective}}.getByIds(keys)),
+{{else}}
+        loaderBy{{toPascalCase ../column}}s: new DataLoader((keys: any) => models.{{#ifDirective ../../../this "entity" }}{{table}}{{/ifDirective}}.getBy{{toPascalCase ../column}}s(keys), {
+            cacheKeyFn: key => key.id,
+        }),
+{{/ifDirective}}
+{{/ifCond}}
+{{/each}}
+{{/ifDirective}}
+{{/eachUniqueColumnRelation}}
+    };
+};
+{{/ifDirective}}

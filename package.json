@@ -1,0 +1,23 @@
+{
+    "name": "apollo-gen",
+    "version": "0.1.0",
+    "description": "MIT",
+    "main": "./src/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mrdayux/apollo-gen.git"
+    },
+    "bin": {
+        "graphql-gen": "src/index.js"
+    },
+    "author": "Dario Ronzoni",
+    "license": "MIT",
+    "homepage": "https://github.com/mrdayux/apollo-gen",
+    "dependencies": {
+        "glob": "^7.1.3",
+        "graphql": "^0.13.2",
+        "graphql-code-generator": "^0.11.0",
+        "graphql-tools": "^3.1.1",
+        "ncp": "^2.0.0"
+    }
+}

@@ -1,0 +1,22 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+import { merge } from 'lodash';
+
+// RESOLVERS
+{{#each types }}
+{{#ifDirective this "entity" }}
+import {{toCamelCase singular }}Resolvers from './entities/{{toLowerCase singular }}/resolvers';
+{{/ifDirective}}
+{{/each}}
+
+// Put one map of resolvers, like makeExecutableSchema expects
+const resolvers = merge({},
+{{#each types }}
+{{#ifDirective this "entity" }}
+    {{toCamelCase singular }}Resolvers,
+{{/ifDirective}}
+{{/each}}
+);
+
+export default resolvers;

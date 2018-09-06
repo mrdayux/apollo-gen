@@ -1,0 +1,18 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+{{#each types }}
+{{#ifDirective this "entity" }}
+import {{toCamelCase singular }} from './entities/{{toLowerCase singular }}/dataloaders';
+{{/ifDirective}}
+{{/each}}
+
+const dataloadersBuilder = (models: any) => ({
+{{#each types }}
+{{#ifDirective this "entity" }}
+    {{toCamelCase singular }}: {{toCamelCase singular }}(models),
+{{/ifDirective}}
+{{/each}}
+});
+
+export default dataloadersBuilder;

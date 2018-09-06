@@ -1,0 +1,16 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+{{#each types }}
+{{#ifDirective this "entity" }}
+import * as {{toCamelCase singular }} from './entities/{{toLowerCase singular }}/model';
+{{/ifDirective}}
+{{/each}}
+
+export default {
+{{#each types }}
+{{#ifDirective this "entity" }}
+    {{toCamelCase singular }},
+{{/ifDirective}}
+{{/each}}
+};

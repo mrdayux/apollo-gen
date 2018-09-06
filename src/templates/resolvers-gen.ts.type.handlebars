@@ -1,0 +1,66 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+{{#ifDirective this "entity" }}
+import { IContext } from '../../index';
+import { I{{singular}}, IFilter{{singular}}, IOrderBy{{singular}}, ISortBy{{singular}}, ICreate{{singular}}, IUpdate{{singular}} } from './model';
+{{#eachUniqueTypeRelation fields}}
+{{#ifDirective this "relation" }}
+{{#ifCond relationType "===" "ONE_TO_MANY"}}
+import { IFilter{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, IOrderBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, ISortBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}} } from '../{{toCamelCase fkTable}}/model';
+{{/ifCond}}
+{{/ifDirective}}
+{{/eachUniqueTypeRelation}}
+
+const resolvers = {
+    Query: {
+        async {{toCamelCase plural}}(_: void, { where, orderBy, sortBy, limit, offset }: QueryArgs<IFilter{{singular}}, IOrderBy{{singular}}, ISortBy{{singular}}>, { models }: IContext) {
+            const nodes = await models.{{toCamelCase singular}}.getAll({ where, orderBy, sortBy, limit, offset });
+            const totalCount = await models.{{toCamelCase singular}}.getTotalCount({ where });
+            const {{toCamelCase plural}} = { totalCount, nodes };
+            return {{toCamelCase plural}};
+        },
+
+        async {{toCamelCase singular}}(_: void, { where }: { where: IFilter{{singular}} }, { models }: IContext) {
+            return models.{{toCamelCase singular}}.getBy({ where });
+        },
+    },
+
+    Mutation: {
+        create{{singular}}(_: void, { {{toCamelCase singular}} }: { {{toCamelCase singular}}: ICreate{{singular}} }, { models }: IContext) {
+            return models.{{toCamelCase singular}}.create({ {{toCamelCase singular}} });
+        },
+
+        update{{singular}}(_: void, { id, {{toCamelCase singular}} }: { id: number; {{toCamelCase singular}}: IUpdate{{singular}} }, { models }: IContext) {
+            return models.{{toCamelCase singular}}.update({ id, {{toCamelCase singular}} });
+        },
+
+        delete{{singular}}(_: void, { id }: { id: number }, { models }: IContext) {
+            return models.{{toCamelCase singular}}.remove({ id });
+        },
+    },
+
+    {{singular}}: {
+{{#each fields}}
+{{#ifDirective this "relation" }}
+{{#ifCond relationType "===" "ONE_TO_MANY"}}
+        {{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, args: QueryRelationArgs<IFilter{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, IOrderBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, ISortBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}>, { models, dataloaders }: IContext) => {
+            const {{../name}} = await dataloaders.{{toCamelCase fkTable}}.loaderBy{{toPascalCase fkColumn}}s.load({ id: {{toCamelCase ../../singular}}.id, args });
+            return {{../name}};
+        },
+{{/ifCond}}
+{{#ifCond relationType "===" "MANY_TO_ONE"}}
+        {{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, _: void, { models, dataloaders }: IContext) => {
+            if ({{toCamelCase ../../singular}}.{{column}}) {
+                return dataloaders.{{toCamelCase fkTable}}.loaderByIds.load({{toCamelCase ../../singular}}.{{column}});
+            }
+            return null;
+        },
+{{/ifCond}}
+{{/ifDirective}}
+{{/each}}
+    },
+};
+
+export default resolvers;
+{{/ifDirective}}

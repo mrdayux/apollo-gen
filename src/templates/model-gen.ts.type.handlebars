@@ -1,0 +1,395 @@
+/* tslint:disable */
+// ** DON'T TOUCH - GENERATED CODE ** //
+
+{{#ifDirective this "entity" }}
+import { Transaction } from 'knex';
+import { UserInputError, ApolloError } from 'apollo-server';
+
+import knex from '../../../core/knex_connector';
+import { {{#each fields}}{{#if isEnum}}{{type}}, {{/if}}{{/each}} SortDirection } from '../../enum';
+import { addOrderBy, addSelectSortBy, addSortBy, getAllFrom, mapAllFilter } from '../../models-helper.gen';
+{{#eachUniqueTypeRelation fields}}
+{{#ifDirective this "relation" }}import { IFilter{{../type}}, ISortBy{{../type}} } from '../{{toLowerCase ../type}}/model';{{/ifDirective}}
+{{/eachUniqueTypeRelation}}
+
+// EXPORTED INTERFACES
+
+export interface I{{singular}} {
+{{#each fields}}
+{{#unlessDirective this "relation" }}
+    {{../name}}: {{#if ../isEnum}}{{toPrimitive "String"}}{{else}}{{toPrimitive ../type}}{{/if}};
+{{/unlessDirective}}
+{{/each}}
+}
+
+export interface IFilter{{singular}} {
+    AND?: IFilter{{singular}}[];
+    OR?: IFilter{{singular}}[];
+{{#each fields}}
+{{#ifCond type "===" "ID"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+{{/ifCond}}
+{{#ifCond type "===" "String"}}
+    {{name}}?: {{toPrimitive type}};
+    {{name}}_not?: {{toPrimitive type}};
+    {{name}}_lt?: {{toPrimitive type}};
+    {{name}}_lte?: {{toPrimitive type}};
+    {{name}}_gt?: {{toPrimitive type}};
+    {{name}}_gte?: {{toPrimitive type}};
+    {{name}}_contains?: {{toPrimitive type}};
+    {{name}}_startsWith?: {{toPrimitive type}};
+    {{name}}_endsWith?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/ifCond}}
+{{#ifCond type "===" "Int"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+    {{name}}_not?: {{toPrimitive type}};
+    {{name}}_lt?: {{toPrimitive type}};
+    {{name}}_lte?: {{toPrimitive type}};
+    {{name}}_gt?: {{toPrimitive type}};
+    {{name}}_gte?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/ifCond}}
+{{#ifCond type "===" "Float"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+    {{name}}_not?: {{toPrimitive type}};
+    {{name}}_lt?: {{toPrimitive type}};
+    {{name}}_lte?: {{toPrimitive type}};
+    {{name}}_gt?: {{toPrimitive type}};
+    {{name}}_gte?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/ifCond}}
+{{#ifCond type "===" "Boolean"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+{{/ifCond}}
+{{#ifCond type "===" "DateTime"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+    {{name}}_not?: {{toPrimitive type}};
+    {{name}}_lt?: {{toPrimitive type}};
+    {{name}}_lte?: {{toPrimitive type}};
+    {{name}}_gt?: {{toPrimitive type}};
+    {{name}}_gte?: {{toPrimitive type}};
+    {{name}}_contains?: {{toPrimitive type}};
+    {{name}}_startsWith?: {{toPrimitive type}};
+    {{name}}_endsWith?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/ifCond}}
+{{#ifCond type "===" "Date"}}
+    {{name}}?: {{toPrimitive type}}{{#unless isRequired}} | null{{/unless}};
+    {{name}}_not?: {{toPrimitive type}};
+    {{name}}_lt?: {{toPrimitive type}};
+    {{name}}_lte?: {{toPrimitive type}};
+    {{name}}_gt?: {{toPrimitive type}};
+    {{name}}_gte?: {{toPrimitive type}};
+    {{name}}_contains?: {{toPrimitive type}};
+    {{name}}_startsWith?: {{toPrimitive type}};
+    {{name}}_endsWith?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/ifCond}}
+{{#if isEnum}}
+    {{name}}?: {{toPrimitive type}};
+    {{name}}_in?: {{toPrimitive type}}[];
+    {{name}}_notIn?: {{toPrimitive type}}[];
+{{/if}}
+{{#ifDirective this "relation" }}
+    {{../name}}_any?: IFilter{{../type}};
+    {{../name}}_none?: IFilter{{../type}};
+    {{../name}}_join?: IFilter{{../type}};
+    {{../name}}_leftJoin?: IFilter{{../type}};
+    {{../name}}_rightJoin?: IFilter{{../type}};
+{{/ifDirective}}
+{{/each}}
+}
+
+export interface ICreate{{singular}} {
+{{#each fields}}
+{{#ifDirective this "column" }}
+{{#unlessDirective this "id" }}
+    {{../name}}{{#unless ../isRequired}}?{{/unless}}: {{toPrimitive ../type}};
+{{/unlessDirective}}
+{{/ifDirective}}
+{{/each}}
+}
+
+export interface IUpdate{{singular}} {
+{{#each fields}}
+{{#ifDirective this "column" }}
+{{#unlessDirective this "id" }}
+    {{../name}}?: {{toPrimitive ../type}};
+{{/unlessDirective}}
+{{/ifDirective}}
+{{/each}}
+}
+
+export enum IOrderBy{{singular}} {
+{{#each fields}}
+{{#unlessDirective this "relation" }}
+    {{../name}}_ASC = '{{../name}}_ASC',
+    {{../name}}_DESC = '{{../name}}_DESC',
+{{/unlessDirective}}
+{{/each}}
+}
+
+export interface ISortBy{{singular}} {
+{{#each fields}}
+{{#unlessDirective this "relation" }}
+    {{../name}}?: SortDirection;
+{{/unlessDirective}}
+{{#ifDirective this "relation" }}
+    {{../name}}_join?: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}ISortBy{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}[];
+{{/ifDirective}}
+{{/each}}
+}
+
+// export interface ISortBy{{singular}}2 {
+// {{#each fields}}
+// {{#unlessDirective this "relation" }}
+//     {{../name}}?: SortDirection;
+// {{/unlessDirective}}
+// {{#ifDirective this "relation" }}
+// {{#ifCond relationType "===" "MANY_TO_ONE"}}
+//     {{../name}}_join?: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}ISortBy{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}[];
+// {{/ifCond}}
+// {{/ifDirective}}
+// {{/each}}
+// }
+
+// OTHER INTERFACES
+
+export interface IGet{{singular}}Args {
+    where: IFilter{{singular}};
+    authWhere?: IFilter{{singular}};
+    transaction?: Transaction;
+}
+
+export interface IGetAll{{singular}}Args {
+    where?: IFilter{{singular}};
+    authWhere?: IFilter{{singular}};
+    orderBy?: IOrderBy{{singular}}[];
+    sortBy?: ISortBy{{singular}}[];
+    limit: number;
+    offset?: number;
+    transaction?: Transaction;
+}
+
+export interface IGetTotalCount{{singular}}Args {
+    where?: IFilter{{singular}};
+    authWhere?: IFilter{{singular}};
+    transaction?: Transaction;
+}
+
+export interface ICreate{{singular}}Args {
+    {{toCamelCase singular}}: ICreate{{singular}};
+    transaction?: Transaction;
+}
+
+export interface IUpdate{{singular}}Args {
+    {{toCamelCase singular}}: IUpdate{{singular}};
+    id: number;
+    transaction?: Transaction;
+}
+
+export interface IRemove{{singular}}Args {
+    id: number;
+    transaction?: Transaction;
+}
+
+// CRUD FUNCTIONS
+
+export const getBy = async ({ where, authWhere, transaction }: IGet{{singular}}Args): Promise<I{{singular}}> => {
+    if (!where) {
+        throw new UserInputError('Validation: select filter');
+    }
+
+    let query = knex
+        .distinct('{{table}}.*')
+        .from('{{table}}');
+
+    query = getAllFrom(query, '{{table}}', [where, authWhere]);
+    
+    query.where(mapAllFilter(where, '{{table}}'));
+    
+    if (authWhere) {
+        query.andWhere(mapAllFilter(authWhere, '{{table}}'));
+    }
+    query.first();
+
+
+    if (transaction) {
+        query.transacting(transaction);
+    }
+
+    const row = await query;
+    return row;
+};
+
+export const getAll = async ({ where, authWhere, orderBy, sortBy, limit, offset, transaction }: IGetAll{{singular}}Args): Promise<I{{singular}}[]> => {
+    const selectClause = [];
+    const selectSortByClause = addSelectSortBy('', '{{table}}', sortBy);
+    if (selectSortByClause) {
+        selectClause.push(knex.raw(selectSortByClause));
+    }
+    selectClause.push('{{table}}.*');
+    let query = knex.distinct(...selectClause).from('{{table}}');
+
+    query = getAllFrom(query, '{{table}}', [where, authWhere], sortBy);
+
+    if (where) {
+        query.where(mapAllFilter(where, '{{table}}'));
+    }
+    if (authWhere) {
+        query.andWhere(mapAllFilter(authWhere, '{{table}}'));
+    }
+    if (orderBy) {
+        query = addOrderBy(query, orderBy);
+    }
+    if (sortBy) {
+        query = addSortBy(query, '{{table}}', sortBy);
+    }
+    if (limit) {
+        query.limit(limit);
+    }
+    if (offset) {
+        query.offset(offset);
+    }
+    if (transaction) {
+        query.transacting(transaction);
+    }
+
+    const rows = await query;
+    return rows || [];
+};
+
+export const getTotalCount = async ({ where, authWhere, transaction }: IGetTotalCount{{singular}}Args): Promise<number> => {
+    let query = knex.countDistinct('{{table}}.id AS totalCount').from('{{table}}');
+
+    query = getAllFrom(query, '{{table}}', [where, authWhere]);
+
+    if (where) {
+        query.where(mapAllFilter(where, '{{table}}'));
+    }
+    if (authWhere) {
+        query.andWhere(mapAllFilter(authWhere, '{{table}}'));
+    }
+    if (transaction) {
+        query.transacting(transaction);
+    }
+
+    const result = await query;
+
+    return result[0].totalCount || 0;
+};
+
+export const create = async ({ {{toCamelCase singular}}, transaction }: ICreate{{singular}}Args): Promise<I{{singular}}> => {
+    const query = knex('{{table}}');
+    if (transaction) {
+        query.transacting(transaction);
+    }
+    const [insertId] = await query.insert({{toCamelCase singular}});
+    if (!insertId) {
+        throw new ApolloError('Create {{toCamelCase singular}} failed.');
+    }
+    const row = await getBy({ where: { id: insertId }, transaction });
+    return row;
+};
+
+export const update = async ({ {{toCamelCase singular}}, id, transaction }: IUpdate{{singular}}Args): Promise<I{{singular}}> => {
+    const query = knex('{{table}}');
+    if (transaction) {
+        query.transacting(transaction);
+    }
+    const affectedRows = await query
+        .update({{toCamelCase singular}})
+        .where({ id });
+    if (!affectedRows) {
+        throw new ApolloError('Update {{toCamelCase singular}} failed.');
+    }
+    const row = await getBy({ where: { id }, transaction });
+    return row;
+};
+
+export const remove = async ({ id, transaction }: IRemove{{singular}}Args): Promise<I{{singular}}> => {
+    const row = await getBy({ where: { id }, transaction });
+    if (!row) {
+        throw new ApolloError('Remove {{toCamelCase singular}} failed.');
+    }
+    const query = knex('{{table}}');
+    if (transaction) {
+        query.transacting(transaction);
+    }
+    await query.del().where({ id });
+    return row;
+};
+
+
+// DATALOADERS FUNCTIONS
+
+{{#eachUniqueColumnRelation fields}}
+{{#ifDirective this "relation" }}
+{{#ifCond relationType "===" "ONE_TO_MANY"}}
+export const getByIds = async (ids: number[]): Promise<I{{../../singular}}[]> => {
+    const rows = await knex('{{../../table}}').whereIn('id', ids);
+    return ids.map(id => rows.find((row: I{{../../singular}}) => row.id === id));
+};
+
+{{/ifCond}}
+{{#ifCond relationType "===" "MANY_TO_ONE"}}
+export const getBy{{toPascalCase column}}s = async (keys: any[]): Promise<I{{../../singular}}[]> => {
+    const args = keys[0].args;
+    const ids = keys.map(key => key.id);
+
+    let query = knex.distinct('{{../../table}}.*').from('{{../../table}}').whereIn('{{../../table}}.{{column}}', ids);
+    
+    query = getAllFrom(query, '{{../../table}}', [args.where, args.authWhere], args.sortBy);
+
+    if (args.where) {
+        query.where(mapAllFilter(args.where, '{{../../table}}'));
+    }
+    if (args.authWhere) {
+        query.andWhere(mapAllFilter(args.authWhere, '{{../../table}}'));
+    }
+
+    if (args.orderBy) {
+        query = addOrderBy(query, args.orderBy);
+    }
+
+    if (args.sortBy) {
+        query = addSortBy(query, '{{table}}', args.sortBy);
+    }
+
+    const rows = await query;
+
+    return ids.map(id => rows.filter((row: any) => row.{{column}} === id));
+};
+
+{{/ifCond}}
+{{/ifDirective}}
+{{/eachUniqueColumnRelation}}
+
+// PRIVATE FUNCTION
+
+export function getRelation(property: string): any {
+    switch (property) {
+{{#each fields}}
+{{#ifDirective this "relation" }}
+        case '{{../name}}':
+            return {
+                table: '{{../../table}}',
+                column: '{{column}}',
+                fkTable: '{{fkTable}}',
+                fkColumn: '{{fkColumn}}',
+            };
+
+{{/ifDirective}}
+{{/each}}
+
+        default:
+            return null;
+    }
+}
+{{/ifDirective}}

@@ -1,0 +1,6 @@
+import { merge } from 'lodash';
+import dataloadersBuilderGen from './dataloaders-builder.gen';
+
+export default (models: any) => {
+    return merge(dataloadersBuilderGen(models), {});
+};

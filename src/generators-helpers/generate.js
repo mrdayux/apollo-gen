@@ -13,7 +13,7 @@ function generate(entry, methods, language, options) {
     }
 
     if (language === 'gql') {
-        return `## Not generated - ${options.fn(this)}`;
+        return `## ${options.fn(this)}`;
     } else {
         return `// ${options.fn(this).replace(/\n/gi, '\n// ')}`;
     }

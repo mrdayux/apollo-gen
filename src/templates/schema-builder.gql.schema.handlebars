@@ -49,6 +49,8 @@ directive @auth(
     deleteRoles: [AuthRole!]
 ) on OBJECT | FIELD | FIELD_DEFINITION
 
+directive @notGenerated on FIELD_DEFINITION
+
 directive @generate(
     getOne: Boolean
     getAll: Boolean

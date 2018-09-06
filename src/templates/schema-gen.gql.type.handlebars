@@ -4,13 +4,13 @@
 type {{singular}} implements Node {
 {{#each fields}}
 {{#ifDirective this "column" }}
-    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "notGenerated" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
 {{/ifDirective}}
 {{#ifDirective this "relation" }}
 {{#if ../isArray}}    
-    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}(where: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput, orderBy: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}OrderBy!], sortBy:[{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]):  [{{../type}}]{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "notGenerated" }}## Not generated - {{/ifDirective}}{{../name}}(where: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput, orderBy: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}OrderBy!], sortBy:[{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]):  [{{../type}}]{{#if ../isRequired}}!{{/if}}
 {{else}}
-    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "notGenerated" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
 {{/if}}
 {{/ifDirective}}
 {{#ifDirective this "hasRole" }}

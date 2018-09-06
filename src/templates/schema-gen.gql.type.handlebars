@@ -4,13 +4,13 @@
 type {{singular}} implements Node {
 {{#each fields}}
 {{#ifDirective this "column" }}
-    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
 {{/ifDirective}}
 {{#ifDirective this "relation" }}
 {{#if ../isArray}}    
-    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}(where: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput, orderBy: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}OrderBy!], sortBy:[{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]):  [{{../type}}]{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}(where: {{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}FilterInput, orderBy: [{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}OrderBy!], sortBy:[{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase plural}}{{/ifDirective}}{{/withGql}}SortBy!]):  [{{../type}}]{{#if ../isRequired}}!{{/if}}
 {{else}}
-    {{#ifDirective this "customSchema" }}## Custom Schema - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
+    {{#ifDirective this "generate" }}## Not generated - {{/ifDirective}}{{../name}}: {{../type}}{{#if ../isRequired}}!{{/if}}
 {{/if}}
 {{/ifDirective}}
 {{#ifDirective this "hasRole" }}
@@ -24,16 +24,16 @@ type {{plural}}Pagination {
     nodes: [{{singular}}!]!
 }
 
-extend type Query {
-    {{#customSchema this "getOneRoles"}}{{toCamelCase singular}}(where: {{singular}}FilterInput): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getOneRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
-    {{#customSchema this "getAllRoles"}}{{toCamelCase plural}}(where: {{plural}}FilterInput, orderBy: [{{plural}}OrderBy], sortBy: [{{plural}}SortBy], limit: Int!, offset: Int): {{plural}}Pagination! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getAllRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
-}
+{{#generate this "getOne,getAll" "gql"}}extend type Query { {{/generate}}
+    {{#generate this "getAll" "gql"}}{{toCamelCase plural}}(where: {{plural}}FilterInput, orderBy: [{{plural}}OrderBy], sortBy: [{{plural}}SortBy], limit: Int!, offset: Int): {{plural}}Pagination! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getAllRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+    {{#generate this "getOne" "gql"}}{{toCamelCase singular}}(where: {{singular}}FilterInput): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each getOneRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+{{#generate this "getOne,getAll" "gql"}} } {{/generate}}
 
-extend type Mutation {
-    {{#customSchema this "createRoles"}}create{{singular}}({{toCamelCase singular}}: Create{{singular}}!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each createRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
-    {{#customSchema this "updateRoles"}}update{{singular}}({{toCamelCase singular}}: Update{{singular}}!, id: Int!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each updateRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
-    {{#customSchema this "deleteRoles"}}delete{{singular}}(id: Int!): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each deleteRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/customSchema}}
-}
+{{#generate this "create,update,delete" "gql"}}extend type Mutation { {{/generate}}
+    {{#generate this "create" "gql"}}create{{singular}}({{toCamelCase singular}}: Create{{singular}}!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each createRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+    {{#generate this "update" "gql"}}update{{singular}}({{toCamelCase singular}}: Update{{singular}}!, id: Int!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each updateRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+    {{#generate this "delete" "gql"}}delete{{singular}}(id: Int!): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each deleteRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+{{#generate this "create,update,delete" "gql"}} } {{/generate}}
 
 input {{singular}}FilterInput {
 {{#each fields}}

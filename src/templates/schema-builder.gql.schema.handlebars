@@ -49,12 +49,12 @@ directive @auth(
     deleteRoles: [AuthRole!]
 ) on OBJECT | FIELD | FIELD_DEFINITION
 
-directive @customSchema(
-    getOneRoles: Boolean
-    getAllRoles: Boolean
-    createRoles: Boolean
-    updateRoles: Boolean
-    deleteRoles: Boolean
+directive @generate(
+    getOne: Boolean
+    getAll: Boolean
+    create: Boolean
+    update: Boolean
+    delete: Boolean
 ) on OBJECT | FIELD | FIELD_DEFINITION
 
 # directive @stringManipulation(lowercase: Boolean, trim: Boolean, uppercase: Boolean) on FIELD_DEFINITION

@@ -10,9 +10,9 @@
         "Date": "string"
     },
     "customHelpers": {
-        "customSchema": "./node_modules/apollo-gen/src/generators-helpers/custom-schema.js",
         "eachUniqueColumnRelation": "./node_modules/apollo-gen/src/generators-helpers/each-unique-column-relation.js",
         "eachUniqueTypeRelation": "./node_modules/apollo-gen/src/generators-helpers/each-unique-type-relation.js",
+        "generate": "./node_modules/apollo-gen/src/generators-helpers/generate.js",
         "isArray": "./node_modules/apollo-gen/src/generators-helpers/is-array.js",
         "replace": "./node_modules/apollo-gen/src/generators-helpers/replace.js",
         "toPascalCase": "./node_modules/apollo-gen/src/generators-helpers/to-pascal-case.js"

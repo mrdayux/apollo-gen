@@ -14,30 +14,30 @@ import { IFilter{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPa
 
 const resolvers = {
     Query: {
-        async {{toCamelCase plural}}(_: void, { where, orderBy, sortBy, limit, offset }: QueryArgs<IFilter{{singular}}, IOrderBy{{singular}}, ISortBy{{singular}}>, { models }: IContext) {
+        {{#generate this "getAll" "js"}}async {{toCamelCase plural}}(_: void, { where, orderBy, sortBy, limit, offset }: QueryArgs<IFilter{{singular}}, IOrderBy{{singular}}, ISortBy{{singular}}>, { models }: IContext) {
             const nodes = await models.{{toCamelCase singular}}.getAll({ where, orderBy, sortBy, limit, offset });
             const totalCount = await models.{{toCamelCase singular}}.getTotalCount({ where });
             const {{toCamelCase plural}} = { totalCount, nodes };
             return {{toCamelCase plural}};
-        },
+        },{{/generate}}
 
-        async {{toCamelCase singular}}(_: void, { where }: { where: IFilter{{singular}} }, { models }: IContext) {
+        {{#generate this "getOne" "js"}}async {{toCamelCase singular}}(_: void, { where }: { where: IFilter{{singular}} }, { models }: IContext) {
             return models.{{toCamelCase singular}}.getBy({ where });
-        },
+        },{{/generate}}
     },
 
     Mutation: {
-        create{{singular}}(_: void, { {{toCamelCase singular}} }: { {{toCamelCase singular}}: ICreate{{singular}} }, { models }: IContext) {
+        {{#generate this "create" "js"}}async create{{singular}}(_: void, { {{toCamelCase singular}} }: { {{toCamelCase singular}}: ICreate{{singular}} }, { models }: IContext) {
             return models.{{toCamelCase singular}}.create({ {{toCamelCase singular}} });
-        },
+        },{{/generate}}
 
-        update{{singular}}(_: void, { id, {{toCamelCase singular}} }: { id: number; {{toCamelCase singular}}: IUpdate{{singular}} }, { models }: IContext) {
+        {{#generate this "update" "js"}}async update{{singular}}(_: void, { id, {{toCamelCase singular}} }: { id: number; {{toCamelCase singular}}: IUpdate{{singular}} }, { models }: IContext) {
             return models.{{toCamelCase singular}}.update({ id, {{toCamelCase singular}} });
-        },
+        },{{/generate}}
 
-        delete{{singular}}(_: void, { id }: { id: number }, { models }: IContext) {
+        {{#generate this "delete" "js"}}async delete{{singular}}(_: void, { id }: { id: number }, { models }: IContext) {
             return models.{{toCamelCase singular}}.remove({ id });
-        },
+        },{{/generate}}
     },
 
     {{singular}}: {

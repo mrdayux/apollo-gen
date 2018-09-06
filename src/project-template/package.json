@@ -59,7 +59,7 @@
         "typescript": "^3.0.3"
     },
     "dependencies": {
-        "apollo-gen": "^0.1.3",
+        "apollo-gen": "^0.1.4",
         "apollo-cache-control": "^0.2.3",
         "apollo-engine": "^1.1.2",
         "apollo-server": "^2.0.7",

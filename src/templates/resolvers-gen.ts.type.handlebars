@@ -44,18 +44,18 @@ const resolvers = {
 {{#each fields}}
 {{#ifDirective this "relation" }}
 {{#ifCond relationType "===" "ONE_TO_MANY"}}
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}{{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, args: QueryRelationArgs<IFilter{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, IOrderBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, ISortBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}>, { models, dataloaders }: IContext) => {
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}    const {{../name}} = await dataloaders.{{toCamelCase fkTable}}.loaderBy{{toPascalCase fkColumn}}s.load({ id: {{toCamelCase ../../singular}}.id, args });
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}    return {{../name}};
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}},
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}    {{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, args: QueryRelationArgs<IFilter{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, IOrderBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}, ISortBy{{#withGql "type" ../type}}{{#ifDirective this "entity" }}{{toPascalCase singular}}{{/ifDirective}}{{/withGql}}>, { models, dataloaders }: IContext) => {
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}        const {{../name}} = await dataloaders.{{toCamelCase fkTable}}.loaderBy{{toPascalCase fkColumn}}s.load({ id: {{toCamelCase ../../singular}}.id, args });
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}        return {{../name}};
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}    },
 {{/ifCond}}
 {{#ifCond relationType "===" "MANY_TO_ONE"}}
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}{{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, _: void, { models, dataloaders }: IContext) => {
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}    if ({{toCamelCase ../../singular}}.{{column}}) {
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}        return dataloaders.{{toCamelCase fkTable}}.loaderByIds.load({{toCamelCase ../../singular}}.{{column}});
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}    }
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}    return null;
-        {{#ifDirective this "notGenerated" }}// {{/ifDirective}}},
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}    {{../name}}: async ({{toCamelCase ../../singular}}: I{{../../singular}}, _: void, { models, dataloaders }: IContext) => {
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}        if ({{toCamelCase ../../singular}}.{{column}}) {
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}           return dataloaders.{{toCamelCase fkTable}}.loaderByIds.load({{toCamelCase ../../singular}}.{{column}});
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}        }
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}        return null;
+{{#ifDirective this "notGenerated" }}// {{/ifDirective}}    },
 {{/ifCond}}
 {{/ifDirective}}
 {{/each}}

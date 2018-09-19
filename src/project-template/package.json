@@ -46,6 +46,7 @@
         "@types/node": "^8.10.29",
         "@types/raven": "^2.5.1",
         "@types/supertest": "^2.0.6",
+        "apollo-gen": "^0.1.10",
         "chai": "^4.1.2",
         "concurrently": "^4.0.1",
         "jest": "^23.6.0",
@@ -58,7 +59,6 @@
         "typescript": "^3.0.3"
     },
     "dependencies": {
-        "apollo-gen": "^0.1.9",
         "apollo-cache-control": "^0.2.5",
         "apollo-engine": "^1.1.2",
         "apollo-server": "^2.1.0",

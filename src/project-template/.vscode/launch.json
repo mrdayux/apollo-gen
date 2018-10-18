@@ -6,6 +6,7 @@
             "type": "node",
             "request": "launch",
             "args": ["${workspaceRoot}/src/server.ts"],
+            "runtimeExecutable": "${workspaceRoot}/scripts/bunyan.sh",
             "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
             "env": {
                 "NODE_ENV": "development",

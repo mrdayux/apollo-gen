@@ -7,10 +7,10 @@ const resolvers = {
         name: 'DateTime',
         description: 'DateTime custom scalar type',
         parseValue(value: any): any {
-            return Moment(value, 'YYYY-MM-DD HH:mm').toDate(); // value from the client (number -> Date)
+            return Moment(value, 'YYYY-MM-DD HH:mm').toDate(); // value from the client (string -> DateTime)
         },
         serialize(value: any): string {
-            return Moment(value).format('YYYY-MM-DD HH:mm'); // value sent to the client (number -> Date)
+            return Moment(value).format('YYYY-MM-DD HH:mm'); // value sent to the client (DateTime -> string)
         },
         parseLiteral(ast: any): string | null {
             if (ast.kind === Kind.STRING) {

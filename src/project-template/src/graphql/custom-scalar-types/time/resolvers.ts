@@ -7,14 +7,14 @@ const resolvers = {
         name: 'Time',
         description: 'Time custom scalar type',
         parseValue(value: any): any {
-            return Moment(value, 'H:mm').toDate(); // value from the client (string -> Time)
+            return value; // value from the client (string -> Time)
         },
         serialize(value: any): string {
-            return Moment(value).format('H:mm'); // value sent to the client (Time -> string)
+            return value; // value sent to the client (Time -> string)
         },
         parseLiteral(ast: any): string | null {
             if (ast.kind === Kind.STRING) {
-                return Moment(ast.value.toString(), 'H:mm').format('H:mm');
+                return ast.value;
             }
             return null;
         },

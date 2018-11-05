@@ -1,20 +1,32 @@
 import { GraphQLScalarType } from 'graphql';
+import { ValidationError } from 'apollo-server';
 import { Kind } from 'graphql/language';
 import Moment from 'moment';
 
 const resolvers = {
-    Date: new GraphQLScalarType({
+    Time: new GraphQLScalarType({
         name: 'Time',
         description: 'Time custom scalar type',
         parseValue(value: any): any {
-            return value; // value from the client (string -> Time)
+            const date = Moment('2000-01-01 ' + value, 'YYYY-MM-DD H:mm', true);
+            if (!date.isValid()) {
+                throw new ValidationError(`'${value}' is not a valid time format (HH:dd).`);
+            }
+
+            return date.format('HH:mm'); // value from the client (string -> Time)
         },
         serialize(value: any): string {
-            return value; // value sent to the client (Time -> string)
+            // value sent to the client (Time -> string)
+            return Moment('2000-01-01 ' + value, 'YYYY-MM-DD H:mm').format('HH:mm');
         },
         parseLiteral(ast: any): string | null {
             if (ast.kind === Kind.STRING) {
-                return ast.value;
+                const date = Moment('2000-01-01 ' + ast.value.toString(), 'YYYY-MM-DD H:mm', true);
+                if (!date.isValid()) {
+                    throw new ValidationError(`'${ast.value.toString()}' is not a valid time format (HH:dd).`);
+                }
+
+                return date.format('HH:mm');
             }
             return null;
         },

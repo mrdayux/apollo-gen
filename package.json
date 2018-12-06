@@ -13,11 +13,40 @@
     "author": "Dario Ronzoni",
     "license": "MIT",
     "homepage": "https://github.com/mrdayux/apollo-gen",
+    "jest": {
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js"
+        ],
+        "transform": {
+            "\\.(ts|tsx)$": "ts-jest"
+        },
+        "testRegex": "src/.*__tests__/.*\\.(ts|tsx|js)$"
+    },
+    "scripts": {
+        "test": "NODE_ENV=development jest --forceExit --verbose",
+        "build": "npx tsc"
+    },
     "dependencies": {
         "glob": "^7.1.3",
         "graphql": "^14.0.2",
-        "graphql-code-generator": "^0.14.5",
         "graphql-tools": "^4.0.3",
         "ncp": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.7",
+        "@types/glob": "^7.1.1",
+        "@types/graphql": "^14.0.3",
+        "@types/jest": "^23.3.10",
+        "@types/ncp": "^2.0.1",
+        "@types/node": "^8.10.38",
+        "chai": "^4.2.0",
+        "graphql-tag": "^2.10.0",
+        "jest": "^23.6.0",
+        "ts-jest": "^23.10.5",
+        "ts-node": "^7.0.1",
+        "tslint": "^5.11.0",
+        "typescript": "^3.2.1"
     }
 }

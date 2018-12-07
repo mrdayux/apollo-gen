@@ -25,7 +25,7 @@
         "testRegex": "src/.*__tests__/.*\\.(ts|tsx|js)$"
     },
     "scripts": {
-        "test": "NODE_ENV=development jest --forceExit --verbose",
+        "test": "NODE_ENV=development jest --forceExit --verbose --detectOpenHandles",
         "build": "npx tsc"
     },
     "dependencies": {

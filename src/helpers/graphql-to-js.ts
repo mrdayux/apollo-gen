@@ -1,7 +1,5 @@
-import { graphql, GraphQLSchema, introspectionQuery } from 'graphql';
+import { graphql, buildSchema, GraphQLSchema, introspectionQuery } from 'graphql';
 
-export const getJsSchema = async (schema: any) => {
-    const jsSchema = await graphql(schema, introspectionQuery);
-    console.log(jsSchema);
-    return jsSchema;
+export const getJsSchema = async (schema: string) => {
+    return graphql(buildSchema(schema), introspectionQuery);
 };

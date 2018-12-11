@@ -29,8 +29,10 @@
         "build": "npx tsc"
     },
     "dependencies": {
+        "@graphql-modules/epoxy": "^0.2.17",
         "glob": "^7.1.3",
         "graphql": "^14.0.2",
+        "graphql-codegen-core": "^0.14.5",
         "graphql-tools": "^4.0.3",
         "ncp": "^2.0.0"
     },

@@ -1,6 +1,6 @@
 // import gql from 'graphql-tag';
 import * as chai from 'chai';
-import { getJsSchema } from '../graphql-to-js';
+import { getGraphQLSchema, schemaToTemplateContext } from '../graphql-to-js';
 
 const expect = chai.expect;
 
@@ -112,9 +112,9 @@ const schema = `
 
 describe('Call getJsSchema', () => {
     it('return a js object with schema', async done => {
-        const jsObj = await getJsSchema(schema);
-        expect(jsObj).is.not.null;
-        expect(jsObj).to.be.an('object');
+        const gqlSchema = getGraphQLSchema(schema);
+        expect(gqlSchema).is.not.null;
+        expect(gqlSchema).to.be.an('GraphQlSchema');
         return done();
     });
 });

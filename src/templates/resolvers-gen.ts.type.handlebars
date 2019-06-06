@@ -31,11 +31,11 @@ const resolvers = {
             return models.{{toCamelCase singular}}.create({ {{toCamelCase singular}} });
         },{{/generate}}
 
-        {{#generate this "update" "js"}}async update{{singular}}(_: void, { id, {{toCamelCase singular}} }: { id: number; {{toCamelCase singular}}: IUpdate{{singular}} }, { models }: IContext) {
+        {{#generate this "update" "js"}}async update{{singular}}(_: void, { id, {{toCamelCase singular}} }: { id: any; {{toCamelCase singular}}: IUpdate{{singular}} }, { models }: IContext) {
             return models.{{toCamelCase singular}}.update({ id, {{toCamelCase singular}} });
         },{{/generate}}
 
-        {{#generate this "delete" "js"}}async delete{{singular}}(_: void, { id }: { id: number }, { models }: IContext) {
+        {{#generate this "delete" "js"}}async delete{{singular}}(_: void, { id }: { id: any }, { models }: IContext) {
             return models.{{toCamelCase singular}}.remove({ id });
         },{{/generate}}
     },

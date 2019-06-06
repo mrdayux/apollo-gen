@@ -17,6 +17,7 @@ type {{singular}} implements Node {
     @hasRole(roles: [{{#each roles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}])
 {{/ifDirective}}
 {{/each}}
+_: Int
 }
 
 type {{plural}}Pagination {
@@ -31,8 +32,8 @@ type {{plural}}Pagination {
 
 {{#generate this "create,update,delete" "gql"}}extend type Mutation { {{/generate}}
 {{#generate this "create" "gql"}}   create{{singular}}({{toCamelCase singular}}: Create{{singular}}!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each createRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
-{{#generate this "update" "gql"}}   update{{singular}}({{toCamelCase singular}}: Update{{singular}}!, id: Int!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each updateRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
-{{#generate this "delete" "gql"}}   delete{{singular}}(id: Int!): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each deleteRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+{{#generate this "update" "gql"}}   update{{singular}}({{toCamelCase singular}}: Update{{singular}}!, {{#each fields}}{{#ifDirective this "id" }}{{../name}}: {{../type}}{{/ifDirective}}{{/each}}!): {{singular}}! {{#ifDirective this "auth" }}@hasRole(roles: [{{#each updateRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
+{{#generate this "delete" "gql"}}   delete{{singular}}({{#each fields}}{{#ifDirective this "id" }}{{../name}}: {{../type}}{{/ifDirective}}{{/each}}!): {{singular}} {{#ifDirective this "auth" }}@hasRole(roles: [{{#each deleteRoles}}{ role: {{role}}{{#if conditions}}, conditions: "{{#replace '&quot;' '\"'}}{{conditions}}{{/replace}}"{{/if}} }, {{/each}}]){{/ifDirective}}{{/generate}}
 {{#generate this "create,update,delete" "gql"}} } {{/generate}}
 
 input {{singular}}FilterInput {

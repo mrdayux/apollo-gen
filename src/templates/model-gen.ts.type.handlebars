@@ -190,12 +190,12 @@ export interface ICreate{{singular}}Args {
 
 export interface IUpdate{{singular}}Args {
     {{toCamelCase singular}}: IUpdate{{singular}};
-    id: number;
+    {{#each fields}}{{#ifDirective this "id" }}{{../name}}: {{toPrimitive ../type}}{{/ifDirective}}{{/each}};
     transaction?: Transaction;
 }
 
 export interface IRemove{{singular}}Args {
-    id: number;
+    {{#each fields}}{{#ifDirective this "id" }}{{../name}}: {{toPrimitive ../type}}{{/ifDirective}}{{/each}};
     transaction?: Transaction;
 }
 
@@ -332,7 +332,7 @@ export const remove = async ({ id, transaction }: IRemove{{singular}}Args): Prom
 {{#eachUniqueColumnRelation fields}}
 {{#ifDirective this "relation" }}
 {{#ifCond relationType "===" "ONE_TO_MANY"}}
-export const getByIds = async (ids: number[]): Promise<I{{../../singular}}[]> => {
+export const getByIds = async (ids: Array<any>): Promise<I{{../../singular}}[]> => {
     const rows = await knex('{{../../table}}').whereIn('id', ids);
     return ids.map(id => rows.find((row: I{{../../singular}}) => row.id === id));
 };

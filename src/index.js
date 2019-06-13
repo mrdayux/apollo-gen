@@ -4,27 +4,31 @@ const fs = require('fs');
 const path = require('path');
 const ncp = require('ncp');
 
+const mysql = require('./mysql');
+
 const graphgqlPath = path.join(process.cwd(), './src/graphql/');
 const entitiesPath = path.join(process.cwd(), './src/graphql/entities/');
 
 const isInit = !!(process.argv && process.argv.find(value => value === 'init'));
-const isSchemaFromMysql = !!(process.argv && process.argv.find(value => value === 'mysql-schema'));
+const isCreateSchemaFromMysql = !!(process.argv && process.argv.find(value => value === 'mysql-schema'));
 
-if (!isInit) {
-    generateFiles()
+if (isCreateSchemaFromMysql) {
+    // mysql://user:pass@host/db
+
+    const myqlConnectionString = process.argv.find(value => value.includes(/mysql:\/\//));
+    mysql
+        .createSchemaFomMysql(myqlConnectionString)
         .then(files => {
-            console.log('Start generate files...');
-            moveFiles(files);
+            console.log('GraphQL Schema created!');
         })
         .catch(error => {
             console.error(error);
         });
-} else if (!isSchemaFromMysql) {
-    // mysql://user:pass@host/db
-    const myqlConnectionString = process.argv.find(value => value.includes(/mysql:\/\//));
-    createSchemaFomMysql(myqlConnectionString)
+} else if (!isInit) {
+    generateFiles()
         .then(files => {
-            console.log('Schema created');
+            console.log('Start generate files...');
+            moveFiles(files);
         })
         .catch(error => {
             console.error(error);

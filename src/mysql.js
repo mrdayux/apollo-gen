@@ -15,8 +15,6 @@ exports.createSchemaFomMysql = function createSchemaFomMysql(mysqlConnectionStri
                 const fieldName = fields && fields[0] && fields[0].name;
                 const tables = results.map(tableObj => tableObj[fieldName]);
 
-                // console.log(tables);
-                // console.log(connection.config.database);
                 return tables;
             })
             .then(tables => {
@@ -27,8 +25,6 @@ exports.createSchemaFomMysql = function createSchemaFomMysql(mysqlConnectionStri
                 );
             })
             .then(tablesDetails => {
-                // console.log(JSON.stringify(tablesDetails, null, 4));
-
                 return tablesDetails.map(tableDetails => {
                     const fileContent = createSchemaGql(tableDetails, tablesDetails);
                     return {
@@ -38,26 +34,20 @@ exports.createSchemaFomMysql = function createSchemaFomMysql(mysqlConnectionStri
                 });
             })
             .then(tableFiles => {
-                console.log(JSON.stringify(tableFiles, null, 4));
                 return tableFiles.map(tableFile => {
                     return saveSchemaFile(tableFile);
                 });
             })
-            .then(result => {
-                console.log(result);
-                console.log('Graphql Schema generated!');
-                return true;
-            })
             .catch(error => {
                 console.error(error);
             })
-            .finally(() => {
+            .finally((result) => {
                 if (connection) {
                     connection.end(function(err) {
-                        return resolve();
+                        return resolve(result);
                     });
                 } else {
-                    return resolve();
+                    return resolve(result);
                 }
             });
     });
@@ -135,28 +125,27 @@ function createSchemaGql(tableDetails, tablesDetails) {
     const tableSingular = tableDetails.table;
     const tablePluralCapitalized = capitalizeFirstLetter(pluralize.plural(tableDetails.table));
 
-    const templateFields = tableDetails.fields.map(createTemplateField);
-    const templateInnerRelationship = tableDetails.innerRelationships.map(createTemplateInnerRelationship);
-    const templateOuterRelationship = tableDetails.outerRelationships.map(createTemplateOuterRelationship);
+    const templateFields = tableDetails.fields.map(createTemplateField).join('');
+    const templateInnerRelationship = tableDetails.innerRelationships.map(createTemplateInnerRelationship).join('');
+    const templateOuterRelationship = tableDetails.outerRelationships.map(createTemplateOuterRelationship).join('');
 
-    const templateFile = `
-        type ${tableSingularCapitalized}
-            @entity(table: "${tableSingular}", singular: "${tableSingularCapitalized}", plural: "${tablePluralCapitalized}")
-            @auth(
-                getOneRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
-                getAllRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
-                createRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
-                updateRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
-                deleteRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
-            ) 
-            @generate(getOne: true, getAll: true, create: true, update: true, delete: true) {
-            
-            ${templateFields}
+    const templateFile = `type ${tableSingularCapitalized}
+    @entity(table: "${tableSingular}", singular: "${tableSingularCapitalized}", plural: "${tablePluralCapitalized}")
+    @auth(
+        getOneRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
+        getAllRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
+        createRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
+        updateRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
+        deleteRoles: [{ role: ADMIN }, { role: USER }, { role: NONE }]
+    ) 
+    @generate(getOne: true, getAll: true, create: true, update: true, delete: true) {
 
-            ${templateInnerRelationship}
+    ${templateFields}
 
-            ${templateOuterRelationship}
-        }
+    ${templateInnerRelationship}
+
+    ${templateOuterRelationship}
+}
     `;
 
     return templateFile;

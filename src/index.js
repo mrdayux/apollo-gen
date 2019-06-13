@@ -8,12 +8,23 @@ const graphgqlPath = path.join(process.cwd(), './src/graphql/');
 const entitiesPath = path.join(process.cwd(), './src/graphql/entities/');
 
 const isInit = !!(process.argv && process.argv.find(value => value === 'init'));
+const isSchemaFromMysql = !!(process.argv && process.argv.find(value => value === 'mysql-schema'));
 
 if (!isInit) {
     generateFiles()
         .then(files => {
             console.log('Start generate files...');
             moveFiles(files);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+} else if (!isSchemaFromMysql) {
+    // mysql://user:pass@host/db
+    const myqlConnectionString = process.argv.find(value => value.includes(/mysql:\/\//));
+    createSchemaFomMysql(myqlConnectionString)
+        .then(files => {
+            console.log('Schema created');
         })
         .catch(error => {
             console.error(error);

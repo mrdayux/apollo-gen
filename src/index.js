@@ -15,7 +15,7 @@ const isCreateSchemaFromMysql = !!(process.argv && process.argv.find(value => va
 if (isCreateSchemaFromMysql) {
     // mysql://user:pass@host/db
 
-    const myqlConnectionString = process.argv.find(value => value.includes(/mysql:\/\//));
+    const myqlConnectionString = process.argv.find(value => value && value.includes('mysql://'));
     mysql
         .createSchemaFomMysql(myqlConnectionString)
         .then(files => {

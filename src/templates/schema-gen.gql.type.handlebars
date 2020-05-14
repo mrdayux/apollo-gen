@@ -118,6 +118,7 @@ input {{plural}}FilterInput {
 {{/ifCond}}
 {{#if isEnum}}
     {{name}}: {{type}}
+    {{name}}_not: {{type}}
     {{name}}_in: [{{type}}!]
     {{name}}_notIn: [{{type}}!]
 {{/if}}

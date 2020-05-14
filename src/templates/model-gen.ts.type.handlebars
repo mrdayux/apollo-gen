@@ -93,6 +93,7 @@ export interface IFilter{{singular}} {
 {{/ifCond}}
 {{#if isEnum}}
     {{name}}?: {{toPrimitive type}};
+    {{name}}_not?: {{toPrimitive type}};
     {{name}}_in?: {{toPrimitive type}}[];
     {{name}}_notIn?: {{toPrimitive type}}[];
 {{/if}}

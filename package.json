@@ -16,7 +16,7 @@
     "dependencies": {
         "glob": "^7.1.4",
         "graphql": "^14.0.2",
-        "graphql-code-generator": "^0.12.6",
+        "graphql-code-generator": "^0.18.2",
         "graphql-tools": "^4.0.0",
         "mysql": "^2.17.1",
         "ncp": "^2.0.0",
